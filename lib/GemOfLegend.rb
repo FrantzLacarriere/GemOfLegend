@@ -1,5 +1,4 @@
+require_relative '../config/environment'
 require "GemOfLegend/version"
-
-module GemOfLegend
-  # Your code goes here...
-end
+require "GemOfLegend/champion"
+require "GemOfLegend/client"

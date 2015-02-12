@@ -57,6 +57,16 @@ module GemOfLegend
         end
         expect(champion).to be_a Champion
       end
+
+      it "returns an error when given a champion with an invalid" do
+        champion = nil
+
+        VCR.use_cassette('invalid_champion') do
+          champion = client.champion(id: 90000)
+        end
+        actual = {"errors" => {"code" => "404", "status" => "Champion not found."}}
+        expect(champion).to eql({"errors" => {"code" => "404", "status" => "Champion not found."}})
+      end
     end
   end
 end

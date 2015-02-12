@@ -1,13 +1,17 @@
 module GemOfLegend
   class Champion
-    attr_reader :id, :active, :bot_enabled, :bot_enabled, :free_to_play, :bot_mm_enabled, :ranked_play_enabled
+    attr_reader :id, 
+      :active, 
+      :bot_enabled, 
+      :free_to_play, 
+      :bot_mm_enabled, 
+      :ranked_play_enabled
+
     RESOURCE = "champion"
     def self.all(client:)
       champions = client.fetch(resource_url(client:client))
 
-      champions["champions"].map do |champion|
-        new(champion)
-      end
+      champions["champions"].map { |c| new(c)}
     end
 
     def self.find(client:, id:)

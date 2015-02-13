@@ -16,8 +16,14 @@ module GemOfLegend
 
     def self.find(client:, id:)
       champion = client.fetch(resource_url(client:client, id: id))
-      return self.error(champion) unless champion.code == 200
-      new(champion)
+      if champion.code == 200
+        new(champion)
+      else
+        error_block = lambda do |error|
+          {"errors" => {"code"=> error.code.to_s, "status" => "Champion not found."}}
+        end
+        error_block.call champion
+      end
     end
 
     def self.resource_url(client:, id: nil)
@@ -35,12 +41,6 @@ module GemOfLegend
       @bot_enabled = options.fetch("botEnabled")
       @active = options.fetch("active")
       @free_to_play = options.fetch("freeToPlay")
-    end
-
-    private
-
-    def self.error(error)
-      {"errors" => {"code"=> error.code.to_s, "status" => "Champion not found."}}
     end
   end
 end

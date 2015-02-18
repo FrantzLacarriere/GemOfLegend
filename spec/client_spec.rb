@@ -60,12 +60,17 @@ module GemOfLegend
 
       it "returns an error when given a champion with an invalid" do
         champion = nil
+        called = false
 
         VCR.use_cassette('invalid_champion') do
-          champion = client.champion(id: 90000)
+          champion = client.champion(id: 90000) do |error|
+            expect(error.code).to eql(404)
+            called = true
+          end
         end
-        actual = {"errors" => {"code" => "404", "status" => "Champion not found."}}
-        expect(champion).to eql({"errors" => {"code" => "404", "status" => "Champion not found."}})
+
+        expect(called).to be_truthy
+        expect(champion).to be_nil
       end
     end
   end

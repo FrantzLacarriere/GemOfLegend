@@ -16,8 +16,8 @@ module GemOfLegend
       Champion.all(client: self)
     end
 
-    def champion(id:)
-      Champion.find(client: self, id: id)
+    def champion(id:, &error_block)
+      Champion.find(client: self, id: id, &error_block)
     end
 
     def endpoint

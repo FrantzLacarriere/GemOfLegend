@@ -1,3 +1,4 @@
+require 'ostruct'
 module GemOfLegend
   class Champion
     attr_reader :id,
@@ -14,15 +15,14 @@ module GemOfLegend
       champions["champions"].map { |c| new(c)}
     end
 
-    def self.find(client:, id:)
+    def self.find(client:, id:, &error_block)
+      error_block ||= ->(){}
       champion = client.fetch(resource_url(client:client, id: id))
       if champion.code == 200
         new(champion)
       else
-        error_block = lambda do |error|
-          {"errors" => {"code"=> error.code.to_s, "status" => "Champion not found."}}
-        end
-        error_block.call champion
+        error_block.call(champion)
+        nil
       end
     end
 
